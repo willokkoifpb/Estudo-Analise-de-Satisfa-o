@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="light-mode">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudo Interativo: Análise de Satisfação em TI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-7xl mx-auto">
+        <!-- Botão de Tema Mobile -->
+        <div class="fixed bottom-6 right-6 z-50 md:hidden">
+            <button id="theme-toggle-mobile" class="w-14 h-14 rounded-full bg-blue-500 text-white shadow-lg flex items-center justify-center">
+                <i class="fas fa-moon text-xl"></i>
+            </button>
+        </div>
+
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white">Estudo Interativo: Análise de Satisfação em TI</h1>
+                <p class="text-gray-600 mt-2 dark:text-gray-300">Use as abas para alternar entre os cards de memorização e o conteúdo detalhado dos slides.</p>
+            </div>
+            
+            <!-- Botão de Tema Desktop -->
+            <button id="theme-toggle-desktop" class="hidden md:flex items-center px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
+                <i class="fas fa-moon mr-2"></i> Modo Escuro
+            </button>
+        </div>
+
+        <!-- Abas de Navegação -->
+        <div class="mb-8 flex justify-center border-b border-gray-200 dark:border-gray-700">
+            <button class="tab-button active text-lg font-medium py-4 px-6 border-b-2 border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 dark:text-gray-400" onclick="switchTab('cards')">
+                <i class="fa-solid fa-layer-group mr-2"></i>Cards de Memorização
+            </button>
+            <button class="tab-button text-lg font-medium py-4 px-6 border-b-2 border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 dark:text-gray-400" onclick="switchTab('details')">
+                <i class="fa-solid fa-file-alt mr-2"></i>Conteúdo Detalhado
+            </button>
+        </div>
+
+        <!-- Conteúdo da Aba de Cards -->
+        <div id="cards-content" class="tab-content active">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Cards serão inseridos aqui pelo JS -->
+            </div>
+        </div>
+
+        <!-- Conteúdo da Aba de Detalhes -->
+        <div id="details-content" class="tab-content">
+            <div id="accordion-container">
+                <!-- Acordeão será inserido aqui pelo JS -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
