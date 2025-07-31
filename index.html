@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="light-mode">
+<html lang="pt-BR" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,35 +9,241 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --bg-primary: #f1f5f9; /* slate-100 */
+            --text-primary: #1e293b; /* slate-800 */
+            --card-front: linear-gradient(135deg, #3b82f6, #14b8a6); /* blue-500 to teal-500 */
+            --card-back: #ffffff;
+            --accent-color: #3b82f6; /* blue-500 */
+            --border-color: #e2e8f0; /* slate-200 */
+            --tab-inactive: #94a3b8; /* slate-400 */
+            --accordion-header: #ffffff;
+            --accordion-bg: #f8fafc; /* slate-50 */
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark {
+            --bg-primary: #0f172a; /* slate-900 */
+            --text-primary: #f1f5f9; /* slate-100 */
+            --card-front: linear-gradient(135deg, #1d4ed8, #0d9488); /* blue-700, teal-600 */
+            --card-back: #1e293b; /* slate-800 */
+            --accent-color: #60a5fa; /* blue-400 */
+            --border-color: #334155; /* slate-700 */
+            --tab-inactive: #64748b; /* slate-500 */
+            --accordion-header: #1e293b; /* slate-800 */
+            --accordion-bg: #0f172a; /* slate-900 */
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.25), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        /* Estilos para os Cards */
+        .card-container {
+            perspective: 1000px;
+        }
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+        .card.is-flipped {
+            transform: rotateY(180deg);
+        }
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+        }
+        .card-front {
+            background: var(--card-front);
+            color: white;
+        }
+        .card-back {
+            background-color: var(--card-back);
+            color: var(--text-primary);
+            transform: rotateY(180deg);
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+        .card-back ul {
+            list-style-position: inside;
+            padding-left: 0;
+            text-align: left;
+            width: 100%;
+        }
+        .card-back li {
+            margin-bottom: 8px;
+        }
+        .slide-ref {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        .dark .card-back .slide-ref {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #cbd5e1; /* slate-300 */
+        }
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+        }
+        .card-subtitle {
+            font-size: 1rem;
+            font-weight: 400;
+            text-align: center;
+            margin-top: 8px;
+            opacity: 0.9;
+        }
+        .card-back-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 12px;
+            width: 100%;
+            text-align: left;
+        }
+
+        /* Estilos para as Abas e Conteúdo Detalhado */
+        .tab-button {
+            text-lg font-medium py-4 px-6 border-b-2 border-transparent text-gray-500 hover:text-gray-700;
+        }
+        .tab-button.active {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+            background-color: transparent;
+        }
+        .dark .tab-button {
+            color: var(--tab-inactive);
+        }
+        .dark .tab-button:hover {
+            color: var(--text-primary);
+        }
+        .dark .tab-button.active {
+            background-color: rgba(96, 165, 250, 0.1); /* blue-400 com opacidade */
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .accordion-item {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: border-color 0.3s ease;
+        }
+        .accordion-header {
+            cursor: pointer;
+            padding: 1rem 1.5rem;
+            background-color: var(--accordion-header);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .accordion-header .icon {
+            transition: transform 0.3s;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+            background-color: var(--accordion-bg);
+            padding: 0 1.5rem;
+        }
+        .accordion-content-inner {
+            padding: 1.5rem 0;
+        }
+        .accordion-item.open .accordion-header .icon {
+            transform: rotate(180deg);
+        }
+        
+        /* Botão de Tema */
+        .theme-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .theme-toggle i {
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        
+        /* Mobile first - o botão já está otimizado para mobile */
+        @media (min-width: 768px) {
+            .theme-toggle {
+                bottom: 30px;
+                right: 30px;
+                width: 60px;
+                height: 60px;
+            }
+        }
+    </style>
 </head>
 <body class="p-4 md:p-8">
-    <div class="max-w-7xl mx-auto">
-        <!-- Botão de Tema Mobile -->
-        <div class="fixed bottom-6 right-6 z-50 md:hidden">
-            <button id="theme-toggle-mobile" class="w-14 h-14 rounded-full bg-blue-500 text-white shadow-lg flex items-center justify-center">
-                <i class="fas fa-moon text-xl"></i>
-            </button>
-        </div>
 
-        <div class="flex justify-between items-center mb-8">
-            <div>
-                <h1 class="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white">Estudo Interativo: Análise de Satisfação em TI</h1>
-                <p class="text-gray-600 mt-2 dark:text-gray-300">Use as abas para alternar entre os cards de memorização e o conteúdo detalhado dos slides.</p>
-            </div>
-            
-            <!-- Botão de Tema Desktop -->
-            <button id="theme-toggle-desktop" class="hidden md:flex items-center px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
-                <i class="fas fa-moon mr-2"></i> Modo Escuro
-            </button>
+    <!-- Botão de alternância de tema -->
+    <div class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon" id="themeIcon"></i>
+    </div>
+
+    <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold">Estudo Interativo: Análise de Satisfação em TI</h1>
+            <p class="mt-2">Use as abas para alternar entre os cards de memorização e o conteúdo detalhado dos slides.</p>
         </div>
 
         <!-- Abas de Navegação -->
-        <div class="mb-8 flex justify-center border-b border-gray-200 dark:border-gray-700">
-            <button class="tab-button active text-lg font-medium py-4 px-6 border-b-2 border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 dark:text-gray-400" onclick="switchTab('cards')">
+        <div class="mb-8 flex justify-center border-b border-gray-200 dark:border-slate-700">
+            <button class="tab-button active" onclick="switchTab('cards')">
                 <i class="fa-solid fa-layer-group mr-2"></i>Cards de Memorização
             </button>
-            <button class="tab-button text-lg font-medium py-4 px-6 border-b-2 border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 dark:text-gray-400" onclick="switchTab('details')">
+            <button class="tab-button" onclick="switchTab('details')">
                 <i class="fa-solid fa-file-alt mr-2"></i>Conteúdo Detalhado
             </button>
         </div>
@@ -57,6 +263,126 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        const slideData = [
+            { slide: "1", title: "Título", content: "Análise de Dados de Pesquisas de Satisfação com os Serviços de TI. GESTÃO DA TECNOLOGIA DA INFORMAÇÃO E COMUNICAÇÃO." },
+            { slide: "2", title: "Cenário Atual: Crescimento", content: "Brasil acelera crescimento no setor de TI, mantém posição no Top 10 global e se destaca na América Latina. Crescimento de 13,9% em 2024, impulsionado por IA, digitalização, nuvem e cibersegurança." },
+            { slide: "3", title: "Cenário Atual: Fator de Sucesso", content: "A Satisfação dos Usuários com a infraestrutura, serviços e suporte é um fator determinante de sucesso. A TI aparece como provedora de soluções para alcançar metas e objetivos." },
+            { slide: "4", title: "Problemática", content: "Diante da evolução e do fortalecimento dos serviços de TI, de que forma as empresas podem utilizar os dados de satisfação para orientar suas estratégias?" },
+            { slide: "5", title: "Objetivo", content: "Apresentar a importância das pesquisas de satisfação em TI, destacar indicadores utilizados e analisar artigos sobre o tema." },
+            { slide: "7", title: "O que são Pesquisas de Satisfação?", content: "É um sistema de administração de informações que continuamente capta a voz do cliente, através da avaliação da performance da empresa a partir do ponto de vista do cliente, indicando caminhos para decisões futuras." },
+            { slide: "8", title: "Estágios da Lucratividade", content: "Há uma relação indireta que liga a satisfação à lucratividade. A sequência é: Qualidade → Satisfação → Lealdade → Lucratividade." },
+            { slide: "9", title: "Indicador: CSAT", content: "Customer Satisfaction Score (CSAT) mensura a satisfação com a experiência geral (produto, atendimento, suporte). Geralmente solicitado após uma venda, medido por notas, porcentagem ou escala de percepção." },
+            { slide: "10", title: "Indicador: NPS", content: "Net Promoter Score (NPS) mensura a disposição de um consumidor em indicar os produtos/serviços. Classifica clientes em Detratores (0-6), Passivos (7-8) e Promotores (9-10) para medir a lealdade." },
+            { slide: "11", title: "Importância das Pesquisas", content: "Identificação de pontos de melhoria, tomada de decisão mais assertiva, redução de custos operacionais, inovação orientada pelo cliente, aumento da fidelização e retenção." },
+            { slide: "12-19", title: "Caso TRT-12: Visão Geral", subtitle: "Objetivo e Metodologia", content: "Objetivo: Analisar a satisfação dos usuários de TI no TRT-12. Metodologia: Pesquisa quantitativa (questionários) com usuários internos, usando práticas ITIL para gestão de serviços." },
+            { slide: "12-19", title: "Caso TRT-12: Resultados", subtitle: "O 'KPI Melancia'", content: "Resultado geral foi alto (93,33% satisfeitos), mas mascarou problemas críticos. Este é o 'KPI Melancia': verde por fora, vermelho por dentro." },
+            { slide: "12-19", title: "Caso TRT-12: Ponto Crítico", subtitle: "O Problema do PJe", content: "O principal ponto de insatisfação foi o Processo Judicial Eletrônico (PJe), seguido pela infraestrutura tecnológica." },
+            { slide: "12-19", title: "Caso TRT-12: Conclusão", subtitle: "Ações e Sugestões", content: "A pesquisa foi vital para a melhoria. Sugestões: criar uma base de conhecimento, tutoriais e FAQs para ajudar os usuários." },
+            { slide: "20-26", title: "Caso Jordram: Visão Geral", subtitle: "Objetivo e Metodologia", content: "Objetivo: Analisar a satisfação com o produto 'Guardian'. Metodologia: Questionário baseado no SUMI, focado em 5 fatores de usabilidade: gosto, eficiência, ajuda, controle e aprendizagem." },
+            { slide: "20-26", title: "Caso Jordram: Resultados", subtitle: "A Contradição", content: "Clientes estavam muito insatisfeitos (75%) com as informações e mensagens de ajuda do sistema." },
+            { slide: "20-26", title: "Caso Jordram: O Fator 'Uau!'", subtitle: "Lealdade Extrema", content: "Apesar da insatisfação com a ajuda, 100% dos clientes recomendariam o produto, indicando um NPS de +100 e uma lealdade extrema." },
+            { slide: "20-26", title: "Caso Jordram: Conclusão", subtitle: "Usabilidade Gera Lealdade", content: "O caso demonstra uma forte ligação entre a usabilidade do produto (eficiência, controle) e a lealdade do cliente, mesmo com falhas no suporte/ajuda." }
+        ];
+
+        const cardsContainer = document.getElementById('cards-content').querySelector('.grid');
+        const accordionContainer = document.getElementById('accordion-container');
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+
+        // Gerar Cards
+        slideData.forEach(data => {
+            const cardHTML = `
+                <div class="card-container h-64">
+                    <div class="card" onclick="this.classList.toggle('is-flipped')">
+                        <div class="card-face card-front">
+                            <span class="slide-ref">Slide ${data.slide}</span>
+                            <h2 class="card-title">${data.title}</h2>
+                            ${data.subtitle ? `<p class="card-subtitle">${data.subtitle}</p>` : ''}
+                        </div>
+                        <div class="card-face card-back">
+                            <span class="slide-ref">Slide ${data.slide}</span>
+                            <h3 class="card-back-title">${data.subtitle || data.title}</h3>
+                            <ul>
+                                ${data.content.split('. ').map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+            cardsContainer.innerHTML += cardHTML;
+        });
+
+        // Gerar Acordeão
+        slideData.forEach(data => {
+            const accordionHTML = `
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <span><strong>Slide ${data.slide}:</strong> ${data.title}</span>
+                        <i class="fas fa-chevron-down icon"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner prose max-w-none">
+                            <p>${data.content}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            accordionContainer.innerHTML += accordionHTML;
+        });
+
+        // Lógica das Abas
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(button => button.classList.remove('active'));
+            document.getElementById(tabId + '-content').classList.add('active');
+            document.querySelector(`button[onclick="switchTab('${tabId}')"]`).classList.add('active');
+        }
+
+        // Lógica do Acordeão
+        document.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const item = header.parentElement;
+                const content = header.nextElementSibling;
+                
+                if (item.classList.contains('open')) {
+                    content.style.maxHeight = null;
+                    item.classList.remove('open');
+                } else {
+                    // Fecha todos os outros abertos
+                    document.querySelectorAll('.accordion-item.open').forEach(openItem => {
+                        openItem.classList.remove('open');
+                        openItem.querySelector('.accordion-content').style.maxHeight = null;
+                    });
+                    
+                    content.style.maxHeight = content.scrollHeight + "px";
+                    item.classList.add('open');
+                }
+            });
+        });
+
+        // Lógica do Tema Claro/Escuro
+        function toggleTheme() {
+            const isDarkMode = document.documentElement.classList.toggle('dark');
+            themeIcon.className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+        }
+
+        // Verificar preferência de tema salva ou do sistema
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
+                document.documentElement.classList.add('dark');
+                themeIcon.className = 'fas fa-sun';
+            }
+        }
+
+        // Inicializar
+        themeToggle.addEventListener('click', toggleTheme);
+        initTheme();
+    </script>
+
 </body>
 </html>
