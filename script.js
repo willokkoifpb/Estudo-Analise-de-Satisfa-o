@@ -19,12 +19,25 @@ const slideData = [
   { slide: "20-26", title: "Caso Jordram: Conclusão", subtitle: "Usabilidade Gera Lealdade", content: "O caso demonstra uma forte ligação entre a usabilidade do produto (eficiência, controle) e a lealdade do cliente, mesmo com falhas no suporte/ajuda." }
 ];
 
+// Função para formatar o conteúdo dos cards
+function formatCardContent(content) {
+    // Substituir pontos por quebras de linha, mas manter abreviações
+    const formatted = content
+        .replace(/([^0-9])\. /g, '$1.<br>') // Quebras após pontos finais
+        .replace(/\: /g, ':<br>- ') // Listas após dois pontos
+        .replace(/ - /g, '<br>- '); // Itens de lista
+    
+    return formatted;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const cardsContainer = document.getElementById('cards-content').querySelector('.grid');
     const accordionContainer = document.getElementById('accordion-container');
     
     // Gerar Cards
     slideData.forEach(data => {
+        const formattedContent = formatCardContent(data.content);
+        
         const cardHTML = `
             <div class="card-container h-64">
                 <div class="card" onclick="this.classList.toggle('is-flipped')">
@@ -36,9 +49,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="card-face card-back">
                         <span class="slide-ref">Slide ${data.slide}</span>
                         <h3 class="card-back-title">${data.subtitle || data.title}</h3>
-                        <ul>
-                            ${data.content.split('. ').map(item => `<li>${item}</li>`).join('')}
-                        </ul>
+                        <div class="card-content">
+                            ${formattedContent}
+                        </div>
                     </div>
                 </div>
             </div>
